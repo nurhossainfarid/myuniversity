@@ -1,5 +1,4 @@
 import { Schema, model } from 'mongoose';
-import bcrypt from 'bcrypt';
 
 import {
   TStudentName,
@@ -7,7 +6,6 @@ import {
   TLocalGuardian,
   TStudent
 } from './student.interface'
-import config from '../../config';
 
 // student name Schema
 const nameSchema = new Schema<TStudentName>({
@@ -85,10 +83,11 @@ const studentSchema = new Schema<TStudent>({
     required: [true, 'Id is required and unique'],
     unique: true,
   },
-  password: {
-    type: String,
-    required: [true, 'Password is required'],
-    maxlength: [20, 'Password can not be more than 20 characters'],
+  user: {
+    type: Schema.Types.ObjectId,
+    required: [true, "User Id is required"],
+    unique: true,
+    ref: "User"
   },
   name: {
     type: nameSchema,
@@ -142,13 +141,10 @@ const studentSchema = new Schema<TStudent>({
     required: [true, "Local Guardian is required"]
   },
   profileImg: String,
-  isActive: {
-    type: String,
-    enum: {
-        values: ['active', 'blocked'],
-        message: '{VALUE} is not valid'
-    },
-    default: 'active'
+  admissionSemester: {
+    type: Schema.Types.ObjectId,
+    required: [true, "Admission Semester is required"],
+    ref: "AcademicSemester"
   },
   isDeleted: {
     type: Boolean,
@@ -165,19 +161,6 @@ studentSchema.virtual('fullName').get(function() {
   return `${this.name.firstName} ${this.name.middleName} ${this.name.lastName}`
 })
 
-// pre save middleware/hook document middleware
-studentSchema.pre('save', async function(next) {
-  // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this;
-  // Hashing password and save into DB
-  user.password = await bcrypt.hash(user.password, Number(config.bcrypt_salt_rounds));
-  next();
-})
-
-studentSchema.post('save', function(doc, next) {
-  doc.password = '';
-  next();
-})
 
 // Query Middleware
 studentSchema.pre('find', async function(next) {

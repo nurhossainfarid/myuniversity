@@ -28,6 +28,7 @@
     "eslint-config-prettier": "^9.1.0",
     "express": "^4.21.1",
     "full-project": "file:",
+    "http-status": "^2.0.0",
     "mongoose": "^8.8.2",
     "prettier": "^3.3.3"
   },
