@@ -1,3 +1,4 @@
+import QueryBuilder from '../../builder/QueryBuilder'
 import { StudentModel } from './student.model'
 
 const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
@@ -10,66 +11,75 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     'name.lastName',
     'presentAddress',
   ]
-  let searchTerm = ''
+  // let searchTerm = ''
 
-  if (query?.searchTerm) {
-    searchTerm = query.searchTerm as string
-  }
+  // if (query?.searchTerm) {
+  //   searchTerm = query.searchTerm as string
+  // }
 
-  // search query
-  const searchQuery = StudentModel.find({
-    $or: studentSearchTerm.map(field => ({
-      [field]: { $regex: searchTerm, $options: 'i' },
-    })),
-  })
+  // // search query
+  // const searchQuery = StudentModel.find({
+  //   $or: studentSearchTerm.map(field => ({
+  //     [field]: { $regex: searchTerm, $options: 'i' },
+  //   })),
+  // })
 
-  // filter query
-  const excludedFields = ['searchTerm', 'sort', 'limit', 'page', 'fields']
-  excludedFields.forEach(el => delete queryObj[el])
+  // // filter query
+  // const excludedFields = ['searchTerm', 'sort', 'limit', 'page', 'fields']
+  // excludedFields.forEach(el => delete queryObj[el])
 
-  const filterQuery = searchQuery.find(queryObj)
+  // const filterQuery = searchQuery.find(queryObj)
 
-  // sort query
-  let sort = '-createdAt' // SET DEFAULT VALUE
+  // // sort query
+  // let sort = '-createdAt' // SET DEFAULT VALUE
 
-  // IF sort  IS GIVEN SET IT
+  // // IF sort  IS GIVEN SET IT
 
-  if (query.sort) {
-    sort = query.sort as string
-  }
+  // if (query.sort) {
+  //   sort = query.sort as string
+  // }
 
-  const sortQuery = filterQuery.sort(sort)
+  // const sortQuery = filterQuery.sort(sort)
 
-  // limit
-  let limit = 1
+  // // limit
+  // let limit = 1
 
-  if (query?.limit) {
-    limit = query.limit as number
-  }
+  // if (query?.limit) {
+  //   limit = query.limit as number
+  // }
 
-  const limitQuery = sortQuery.limit(limit)
+  // const limitQuery = sortQuery.limit(limit)
 
-  //   pagination
-  let page = 1
-  let skip = 0
+  // //   pagination
+  // let page = 1
+  // let skip = 0
 
-  if (query?.page) {
-    page = query.page as number
-    skip = (page - 1) * limit
-  }
+  // if (query?.page) {
+  //   page = query.page as number
+  //   skip = (page - 1) * limit
+  // }
 
-  const paginationQuery = limitQuery.skip(skip)
+  // const paginationQuery = limitQuery.skip(skip)
 
-  //   field query
-  let fields = '-__v'
+  // //   field query
+  // let fields = '-__v'
 
-  if (query?.fields) {
-    fields = String(query?.fields as string).split(',').join(' ');
-  }
+  // if (query?.fields) {
+  //   fields = String(query?.fields as string).split(',').join(' ');
+  // }
 
-  const fieldQuery = await paginationQuery.select(fields)
+  // const fieldQuery = await paginationQuery.select(fields)
 
-  return fieldQuery
+  const studentQuery = new QueryBuilder(StudentModel.find(), query)
+    .search(studentSearchTerm)
+    .filter()
+    .sort()
+    .pagination()
+    .fields()
+
+  const result = await studentQuery.modelQuery;
+
+  return result
 }
 
 const getSingleStudentFromDB = async (id: string) => {
