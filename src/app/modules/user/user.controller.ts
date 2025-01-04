@@ -1,31 +1,35 @@
-import { NextFunction, Request, Response } from "express"
-import { UserServices } from "./user.service"
-import sendResponse from "../../utils/sendResponse"
+import { NextFunction, Request, Response } from 'express'
+import { UserServices } from './user.service'
+import sendResponse from '../../utils/sendResponse'
+import catchAsync from '../../utils/catchAsync'
 
-const createStudent = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const {password, student: studentData} = req.body
+const createStudent = catchAsync(async (req, res) => {
+  const { password, student: studentData } = req.body
 
-    // const zodParsedData = studentValidationSchema.parse(studentData)
+  const result = await UserServices.createStudentIntoDB(password, studentData)
 
-    // // const {error, value} = studentValidationSchema.validate(studentData);
-    // const result = await StudentServices.createStudentIntoDB(zodParsedData)
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Student is created successfully',
+    data: result,
+  })
+})
 
-    const result = await UserServices.createStudentIntoDB(password, studentData)
+const createFaculty = catchAsync(async (req, res) => {
+  const { password, faculty: facultyData } = req.body
 
-    sendResponse(res, {
-      statusCode: 200,
-      success: true,
-      message: 'Student is created successfully',
-      data: result,
-    })
-  } catch (error) {
-    if (error) {
-      next(error)
-    }
-  }
-}
+  const result = await UserServices.createFacultyIntoDB(password, facultyData)
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Faculty is created successfully',
+    data: result,
+  })
+});
 
 export const UserController = {
-    createStudent
+  createStudent,
+  createFaculty,
 }

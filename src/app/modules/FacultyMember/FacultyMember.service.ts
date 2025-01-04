@@ -8,10 +8,11 @@ import { FacultySearchableFields } from './FacultyMember.constant'
 import { UserModel } from '../user/user.model'
 import { TFacultyMember } from './FacultyMember.interface'
 
-
 const getAllFacultiesFromDB = async (query: Record<string, unknown>) => {
   const facultyQuery = new QueryBuilder(
-    FacultyMember.find().populate('academicDepartment'),
+    FacultyMember.find().populate(
+      'academicDepartment',
+    ),
     query,
   )
     .search(FacultySearchableFields)
@@ -30,7 +31,10 @@ const getSingleFacultyFromDB = async (id: string) => {
   return result
 }
 
-const updateFacultyIntoDB = async (id: string, payload: Partial<TFacultyMember>) => {
+const updateFacultyIntoDB = async (
+  id: string,
+  payload: Partial<TFacultyMember>,
+) => {
   const { name, ...remainingFacultyData } = payload
 
   const modifiedUpdatedData: Record<string, unknown> = {
@@ -43,10 +47,14 @@ const updateFacultyIntoDB = async (id: string, payload: Partial<TFacultyMember>)
     }
   }
 
-  const result = await FacultyMember.findByIdAndUpdate(id, modifiedUpdatedData, {
-    new: true,
-    runValidators: true,
-  })
+  const result = await FacultyMember.findByIdAndUpdate(
+    id,
+    modifiedUpdatedData,
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
   return result
 }
 
