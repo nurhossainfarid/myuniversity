@@ -1,9 +1,9 @@
-import express from 'express';
-import validateRequest from '../../middlewares/validateRequest';
-import { SemesterRegistrationController } from './semesterRegistration.controller';
-import { SemesterRegistrationValidations } from './semesterRegistration.validation';
+import express from 'express'
+import validateRequest from '../../middlewares/validateRequest'
+import { SemesterRegistrationController } from './semesterRegistration.controller'
+import { SemesterRegistrationValidations } from './semesterRegistration.validation'
 
-const router = express.Router();
+const router = express.Router()
 
 router.post(
   '/create-semester-registration',
@@ -11,12 +11,9 @@ router.post(
     SemesterRegistrationValidations.createSemesterRegistrationValidationSchema,
   ),
   SemesterRegistrationController.createSemesterRegistration,
-);
+)
 
-router.get(
-  '/:id',
-  SemesterRegistrationController.getSingleSemesterRegistration,
-);
+router.get('/:id', SemesterRegistrationController.getSingleSemesterRegistration)
 
 router.patch(
   '/:id',
@@ -24,14 +21,12 @@ router.patch(
     SemesterRegistrationValidations.upadateSemesterRegistrationValidationSchema,
   ),
   SemesterRegistrationController.updateSemesterRegistration,
-);
+)
 
-router.get(
-  '/:id',
-  SemesterRegistrationController.getSingleSemesterRegistration,
-);
+router.delete('/:id', SemesterRegistrationController.deleteSemesterRegistration)
 
+router.get('/:id', SemesterRegistrationController.getSingleSemesterRegistration)
 
-router.get('/', SemesterRegistrationController.getAllSemesterRegistrations);
+router.get('/', SemesterRegistrationController.getAllSemesterRegistrations)
 
-export const SemesterRegistrationRoutes = router;
+export const SemesterRegistrationRoutes = router
