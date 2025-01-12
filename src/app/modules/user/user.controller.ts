@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from 'express'
 import { UserServices } from './user.service'
 import sendResponse from '../../utils/sendResponse'
 import catchAsync from '../../utils/catchAsync'
+import httpStatus from 'http-status'
 
 const createStudent = catchAsync(async (req, res) => {
   const { password, student: studentData } = req.body
@@ -27,9 +27,23 @@ const createFaculty = catchAsync(async (req, res) => {
     message: 'Faculty is created successfully',
     data: result,
   })
-});
+})
+
+const createAdmin = catchAsync(async (req, res) => {
+  const { password, admin: adminData } = req.body
+
+  const result = await UserServices.createAdminIntoDB(password, adminData)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Admin is created succesfully',
+    data: result,
+  })
+})
 
 export const UserController = {
   createStudent,
   createFaculty,
+  createAdmin
 }
