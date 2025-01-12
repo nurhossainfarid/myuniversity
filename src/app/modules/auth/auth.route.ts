@@ -25,4 +25,4 @@ router.post(
   AuthController.refreshToken,
 )
 
-export default router;
+export const AuthRoutes = router;
