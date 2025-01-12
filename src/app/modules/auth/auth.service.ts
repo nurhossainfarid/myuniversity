@@ -171,7 +171,7 @@ const refreshToken = async (token: string) => {
   }
 }
 
-export default {
+export const AuthServices = {
   loginUser,
   changePassword,
   refreshToken,
