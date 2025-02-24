@@ -7,7 +7,11 @@ import { TStudent } from '../student/student.interface'
 import { StudentModel } from '../student/student.model'
 import { TUser } from './user.interface'
 import { UserModel } from './user.model'
-import { generateAdminId, generateFacultyId, generateStudentId } from './user.utils'
+import {
+  generateAdminId,
+  generateFacultyId,
+  generateStudentId,
+} from './user.utils'
 import AppError from '../../errors/AppError'
 import status from 'http-status'
 import { TFacultyMember } from '../FacultyMember/FacultyMember.interface'
@@ -22,6 +26,7 @@ const createStudentIntoDB = async (password: string, payload: TStudent) => {
 
   // set student role
   userData.role = 'student'
+  userData.email = payload.email
 
   // semester find by id
   const admissionSemester = await SemesterModel.findById(
@@ -75,6 +80,7 @@ const createFacultyIntoDB = async (
 
   // set faculty role
   userData.role = 'faculty'
+  userData.email = payload.email
 
   // find academic department info
   const academicDepartment = await DepartmentModel.findById(
@@ -130,6 +136,7 @@ const createAdminIntoDB = async (password: string, payload: TAdmin) => {
 
   //set student role
   userData.role = 'admin'
+  userData.email = payload.email
 
   const session = await mongoose.startSession()
 

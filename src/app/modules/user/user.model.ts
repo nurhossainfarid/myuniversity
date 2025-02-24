@@ -3,11 +3,17 @@ import { TUser, UserVerifyModel } from './user.interface'
 import config from '../../config'
 import bcrypt from 'bcrypt'
 
-const userSchema = new Schema<TUser>(
+const userSchema = new Schema<TUser, UserVerifyModel>(
   {
     id: {
       type: String,
       required: [true, 'User ID is required'],
+      unique: true,
+      trim: true,
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
       unique: true,
       trim: true,
     },

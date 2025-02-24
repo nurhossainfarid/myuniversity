@@ -58,10 +58,6 @@ const moduleRoutes = [
     path: '/auth',
     route: AuthRoutes,
   },
-  {
-    path: '*',
-    message: 'Not found',
-  },
 ]
 
 moduleRoutes.forEach(r => router.use(r.path, r.route))
